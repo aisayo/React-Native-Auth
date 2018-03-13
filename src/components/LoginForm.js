@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Text } from 'react-native';
 import firebase from 'firebase';
-import { Button, Card, CardItem, Input } from './common';
+import { Button, Card, CardItem, Input, Spinner } from './common';
 
 
 class LoginForm extends Component {
-    state = { email: '', password: '', error: '' };
+    state = { email: '', password: '', error: '', loading: false };
 
     //when the login button is pressed, it fires off this helper
     //method. this helper method receives an email and a password
@@ -15,7 +15,7 @@ class LoginForm extends Component {
         const { email, password } = this.state;
         //this clears authentication error if user
         //enters login info again
-        this.setState({ error: ''});
+        this.setState({ error: '', loading: true});
         //this statement returns a promise
         firebase.auth().signInWithEmailAndPassword(email, password)
             //catch statement, says if request fails then enter this function
@@ -26,6 +26,17 @@ class LoginForm extends Component {
                         this.setState({ error: 'Authentication Failed.'});
                     }); 
             });
+    }
+
+    renderButton() {
+        if (this.state.loading) {
+            return <Spinner size={"small"}/>;
+        }
+        return (
+            <Button onPress={this.onButtonPress.bind(this)}>
+                        Log In
+			</Button>
+        );
     }
 
 	render() {
@@ -55,9 +66,7 @@ class LoginForm extends Component {
                 </Text>
 
 				<CardItem>
-					<Button onPress={this.onButtonPress.bind(this)}>
-                        Log In
-					</Button>
+					{this.renderButton()}
 				</CardItem>
 			</Card>
 		);
