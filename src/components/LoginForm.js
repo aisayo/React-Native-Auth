@@ -18,6 +18,7 @@ class LoginForm extends Component {
         this.setState({ error: '', loading: true});
         //this statement returns a promise
         firebase.auth().signInWithEmailAndPassword(email, password)
+            .then()
             //catch statement, says if request fails then enter this function
             .catch(() => {
                 //asynchronous method. also returns a promise
@@ -26,6 +27,15 @@ class LoginForm extends Component {
                         this.setState({ error: 'Authentication Failed.'});
                     }); 
             });
+    }
+
+    onLoginSuccess() {
+        this.setState({
+            email : '',
+            password: '',
+            loading: false,
+            error: ''
+         })
     }
 
     renderButton() {
