@@ -18,15 +18,18 @@ class LoginForm extends Component {
         this.setState({ error: '', loading: true});
         //this statement returns a promise
         firebase.auth().signInWithEmailAndPassword(email, password)
-            .then()
+            .then(this.onLoginSuccess.bind(this))
             //catch statement, says if request fails then enter this function
             .catch(() => {
                 //asynchronous method. also returns a promise
                 firebase.auth().createUserWithEmailAndPassword(email, password)
-                    .catch(() => {
-                        this.setState({ error: 'Authentication Failed.'});
-                    }); 
+                    .then(this.onLoginSuccess.bind(this))
+                    .catch(this.onLoginFail.bind(this)); 
             });
+    }
+
+    onLoginFail() {
+        this.setState({ error: 'Authentication Failed', loading: false});
     }
 
     onLoginSuccess() {
